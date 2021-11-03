@@ -18,23 +18,31 @@ namespace ClustererSample {
         private void Form1_Load(object sender, EventArgs e) {
             DataAdapter.DataSource = LoadData();
             DistanceBasedClusterer clusterer = new DistanceBasedClusterer {
+                ItemMaxSize = 60,
+                ItemMinSize = 14,
                 GroupProvider = new AttributeGroupProvider {
                     AttributeName = "LocationName"
                 }
             };
+
             clusterer.SetClusterItemFactory(new CustomClusterItemFactory());
             DataAdapter.Clusterer = clusterer;
 
+            DataAdapter.PropertyMappings.Add(new MapDotSizeMapping { DefaultValue = 14 });
+
+            MouseHoverInteractiveClusterMode interactiveMode = new MouseHoverInteractiveClusterMode();
+            interactiveMode.ExpandedClusterLayout = new ExpandedClusterAdaptiveLayout();
+            map.InteractiveClusterMode = interactiveMode;
         }
         #endregion #Clusterer
 
         List<Tree> LoadData() {
             List<Tree> trees = new List<Tree>();
             XDocument doc = XDocument.Load("Data\\TreesCl.xml");
-            foreach(XElement xTree in doc.Element("RowSet").Elements("Row")) {
+            foreach (XElement xTree in doc.Element("RowSet").Elements("Row")) {
                 trees.Add(new Tree {
                     Latitude = Convert.ToDouble(xTree.Element("lat").Value, CultureInfo.InvariantCulture),
-                    Longitude = Convert.ToDouble(xTree.Element("lon").Value,CultureInfo.InvariantCulture),
+                    Longitude = Convert.ToDouble(xTree.Element("lon").Value, CultureInfo.InvariantCulture),
                     LocationName = xTree.Element("location").Value.ToString(CultureInfo.InvariantCulture)
                 });
             }
@@ -45,10 +53,11 @@ namespace ClustererSample {
     #region #Factory
     class CustomClusterItemFactory : IClusterItemFactory {
         public MapItem CreateClusterItem(IList<MapItem> objects) {
-            MapDot dot = new MapDot();
-            dot.ClusteredItems = objects;
-            dot.TitleOptions.Pattern = objects.Count.ToString();
-            return dot;
+            return new MapDot();
+        }
+
+        public void CustomizeCluster(MapItem cluster) {
+            ((MapDot)cluster).TitleOptions.Pattern = cluster.ClusteredItems.Count.ToString();
         }
     }
     #endregion #Factory
