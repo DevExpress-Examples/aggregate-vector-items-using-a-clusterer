@@ -52,13 +52,13 @@ Namespace ClustererSample
 
 #Region "#Factory"
     Friend Class CustomClusterItemFactory
-        Inherits IClusterItemFactory
+        Implements IClusterItemFactory
 
-        Public Function CreateClusterItem(ByVal objects As IList(Of MapItem)) As MapItem
+        Private Function IClusterItemFactory_CreateClusterItem(objects As IList(Of MapItem)) As MapItem Implements IClusterItemFactory.CreateClusterItem
             Return New MapDot()
         End Function
 
-        Public Sub CustomizeCluster(ByVal cluster As MapItem)
+        Private Sub IClusterItemFactory_CustomizeCluster(cluster As MapItem) Implements IClusterItemFactory.CustomizeCluster
             CType(cluster, MapDot).TitleOptions.Pattern = cluster.ClusteredItems.Count.ToString()
         End Sub
     End Class
