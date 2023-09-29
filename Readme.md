@@ -23,7 +23,7 @@ interface to the [MapDataAdapterBase.Clusterer](https://docs.devexpress.com/Wind
 
 
 <!-- default file list -->
-## Files to Look At
+## Files to Review
 * [Form1.cs](./CS/ClustererSample/Form1.cs) (VB: [Form1.vb](./VB/ClustererSample/Form1.vb))
 <!-- default file list end -->
 
